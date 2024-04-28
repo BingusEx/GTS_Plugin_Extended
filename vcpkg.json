@@ -6,13 +6,37 @@
     "plugin": {
       "description": "Build the SKSE plugin.",
       "dependencies": [
-        "commonlibsse-ng",
+        "boost-stl-interfaces",
+        "cryptopp",
+        "directxtk",
+        "effolkronium-random",
+        "gluino",
+        "fmt",
+        {
+          "name" : "imgui",
+          "features": [ "win32-binding", "dx11-binding" ]
+        },
         "glm",
         "toml11",
         "nlohmann-json",
-		    "gluino"
+        "rapidcsv",
+        "rsm-binary-io",
+        "rsm-mmio",
+        "spdlog",
+        "xbyak",
+        "catch2"
       ]
     }
   },
-  "default-features": ["plugin"]
+  "default-features": ["plugin"],
+  "overrides": [
+    {
+      "name" : "imgui",
+      "version": "1.89.6"
+    },
+    {
+      "name": "fmt",
+      "version": "8.0.1"
+    }
+  ]
 }

@@ -4,15 +4,15 @@
 
 using namespace RE;
 
-template <> struct fmt::formatter<BSFixedString> : formatter<string_view> {
-	auto format(BSFixedString v, format_context& ctx) const {
-		string_view name = "<empty>";
-		if (v.c_str()) {
-			name = v.c_str();
-		}
-		return formatter<string_view>::format(name, ctx);
-	}
-};
+// template <> struct fmt::formatter<BSFixedString> : formatter<string_view> {
+// 	auto format(BSFixedString v, format_context& ctx) const {
+// 		string_view name = "<empty>";
+// 		if (v.c_str()) {
+// 			name = v.c_str();
+// 		}
+// 		return formatter<string_view>::format(name, ctx);
+// 	}
+// };
 
 
 template <> struct fmt::formatter<ACTOR_VALUE_MODIFIER>: formatter<string_view> {
@@ -271,7 +271,7 @@ template <> struct fmt::formatter<DEFAULT_OBJECT>: formatter<string_view> {
 			case DEFAULT_OBJECT::kKeywordFurnitureForces1stPerson: name = "kKeywordFurnitureForces1stPerson"; break;
 			case DEFAULT_OBJECT::kKeywordFurnitureForces3rdPerson: name = "kKeywordFurnitureForces3rdPerson"; break;
 			case DEFAULT_OBJECT::kKeywordActivatorFurnitureNoPlayer: name = "kKeywordActivatorFurnitureNoPlayer"; break;
-			default: name = std::format("Other: {}", stl::to_underlying(v)); break;
+			default: name = std::format("Other: {}", std::to_underlying(v)); break;
 		}
 		return formatter<string_view>::format(name, ctx);
 	}

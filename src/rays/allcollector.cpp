@@ -44,9 +44,10 @@ hkpClosestRayHitCollector::~hkpClosestRayHitCollector() {
 	// Dummy
 }
 
-hkpRayHitCollector::~hkpRayHitCollector() {
-	// Dummy
-}
+//Included In Commonlib?
+// hkpRayHitCollector::~hkpRayHitCollector() {
+// 	// Dummy
+// }
 
 
 ExtraDataList::ExtraDataList() {

@@ -5,6 +5,7 @@
 using namespace std;
 using namespace RE;
 using namespace SKSE;
+using namespace std::literals;
 
 namespace Gts {
 	class Plugin {
@@ -17,6 +18,15 @@ namespace Gts {
 			static bool OnMainThread();
 			static void SetOnMainThread(bool value);
 
+			static inline constexpr REL::Version VERSION{
+				// clang-format off
+				2u,
+				0u,
+				0u,
+				// clang-format on
+			};
+
+			static inline constexpr auto NAME = "GTSPlugin"sv;
 
 		private:
 			[[nodiscard]] static Plugin& GetSingleton();

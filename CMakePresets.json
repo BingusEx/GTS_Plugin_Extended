@@ -10,6 +10,7 @@
             "name": "base",
             "hidden": true,
             "cacheVariables": {
+                "ENABLE_SKYRIM_VR": "False",
                 "CMAKE_CXX_FLAGS": "$env{COMMONLIBSSE_COMPILER} $env{COMMONLIBSSE_PLATFORM} $env{COMMONLIBSSE_TEXT}",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
             }
@@ -88,7 +89,7 @@
             "cacheVariables": {
                 "BUILD_TESTS": {
                     "type": "STRING",
-                    "value": "ON"
+                    "value": "OFF"
                 }
             }
         },

@@ -267,7 +267,7 @@ namespace Gts {
 
 		bool PreciseScan = Runtime::GetBoolOr("AccurateCellScan", false);
 
-		if (!PreciseScan || !REL::Module::IsSE()) { // Scan single cell only
+		if (!PreciseScan) { // Scan single cell only
 			TESObjectCELL* cell = giant->GetParentCell();
 			if (cell) {
 				auto data = cell->GetRuntimeData();
@@ -288,25 +288,39 @@ namespace Gts {
 					}
 				}
 			}
-		} else if (PreciseScan && REL::Module::IsSE()) { // Else scan Entire world, SE only for now: TES->ForEachReferenceInRange crashes on AE!
-			const auto TES = TES::GetSingleton(); // Crashes on AE, ty Todd (Also seems to be FPS expensive)
-			if (TES) {
+		} else if (PreciseScan) { // Else scan Entire world, SE only for now: TES->ForEachReferenceInRange crashes on AE!
+			//auto TES = TES::GetSingleton(); // Crashes on AE, ty Todd (Also seems to be FPS expensive)
+			//if (TES) {
 				TESObjectREFR* GiantRef = skyrim_cast<TESObjectREFR*>(giant);
 				if (GiantRef) {
-					TES->ForEachReferenceInRange(GiantRef, maxDistance, [&](RE::TESObjectREFR& a_ref) {
-						bool IsActor = a_ref.Is(FormType::ActorCharacter);
+					ForEachReferenceInRangeWorkaround(GiantRef, maxDistance, [&](RE::TESObjectREFR* a_ref) {
+						bool IsActor = a_ref->Is(FormType::ActorCharacter);
 						if (!IsActor) { // we don't want to apply it to actors
-							NiPoint3 objectlocation = a_ref.GetPosition();
+							NiPoint3 objectlocation = a_ref->GetPosition();
 							float distance = (point - objectlocation).Length();
+                            logger::info("Distance: {}", distance);
 							if (distance <= maxDistance) {
-								ObjectRefHandle handle = a_ref.CreateRefHandle();
-								Objects.push_back(handle);
+                                logger::info("Pre-event");
+								ObjectRefHandle handle = a_ref->GetHandle();
+                                if (handle) {
+									logger::info("Handle-Ok");
+									Objects.push_back(handle);
+									if(handle.get()->GetFormID()){
+										logger::info("FormID-Ok");
+										logger::info("FormID {}",handle.get()->GetFormID());
+									}
+
+                                } else {
+                                  logger::info("Handle Was Null");
+                                }
+
+								logger::info("Post-event");
 							}
 						}
 						return RE::BSContainer::ForEachResult::kContinue;    
 					});
 				}
-			}
+			//}
 		}
 
 		return Objects;

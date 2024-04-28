@@ -13,8 +13,6 @@
 #include "data/transient.hpp"
 #include "spring.hpp"
 
-#include <stddef.h>
-#include <thread>
 #include "git.h"
 
 using namespace RE::BSScript;
@@ -37,8 +35,8 @@ namespace {
 	 * (or <code>Skyrim VR</code> if you are using VR).
 	 * </p>
 	 */
-	void InitializeLogging()
-	{
+	void InitializeLogging() {
+
 		auto path = log_directory();
 
 		if (!path) {
@@ -98,12 +96,12 @@ namespace {
 	 * message, and some messages have no data (<code>dataLen</code> will be zero).
 	 * </p>
 	 */
-	void InitializeMessaging()
-	{
+	void InitializeMessaging() {
+
 		if (!GetMessagingInterface()->RegisterListener([](MessagingInterface::Message *message) {
 			auto gitData = std::format("{} ({}) on {}", git_CommitSubject(), git_CommitSHA1(), git_CommitDate());
-			switch (message->type)
-			{
+			switch (message->type) {
+
 				// Skyrim lifecycle events.
 				case MessagingInterface::kPostLoad: // Called after all plugins have finished running SKSEPlugin_Load.
 				// It is now safe to do multithreaded operations, or operations against other plugins.
@@ -144,7 +142,7 @@ namespace {
 					break;
 			}
 		})) {
-			stl::report_and_fail("Unable to register message listener.");
+			RE::stl::report_and_fail("Unable to register message listener.");
 		}
 	}
 }
@@ -164,7 +162,7 @@ void InitializePapyrus() {
 	if (GetPapyrusInterface()->Register(Gts::register_papyrus)) {
 		log::info("Papyrus functions bound.");
 	} else {
-		stl::report_and_fail("Failure to register Papyrus bindings.");
+		RE::stl::report_and_fail("Failure to register Papyrus bindings.");
 	}
 }
 
@@ -181,6 +179,39 @@ void InitializeEventSystem() {
 	RegisterManagers();
 }
 
+
+extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface* a_skse, SKSE::PluginInfo* a_info) {
+	a_info->infoVersion = SKSE::PluginInfo::kVersion;
+	a_info->name = Plugin::NAME.data();
+	a_info->version = Plugin::VERSION.pack();
+
+	if (a_skse->IsEditor()) {
+		//logger::critical("Loaded in editor, marking as incompatible"sv);
+		return false;
+	}
+
+	const auto ver = a_skse->RuntimeVersion();
+	if (ver < SKSE::RUNTIME_SSE_1_5_39) {
+		logger::critical(FMT_STRING("Unsupported runtime version {}"), ver.string());
+		return false;
+	}
+	return true;
+}
+
+extern "C" DLLEXPORT constinit auto SKSEPlugin_Version = []() {
+	SKSE::PluginVersionData v;
+
+	v.PluginVersion(Plugin::VERSION);
+	v.PluginName(Plugin::NAME);
+	v.AuthorName("Sermitse");
+	v.UsesAddressLibrary(true);
+	v.CompatibleVersions({ SKSE::RUNTIME_SSE_LATEST });
+	v.HasNoStructUse(true);
+
+	return v;
+}();
+
+
 /**
  * This if the main callback for initializing your SKSE plugin, called just before Skyrim runs its main function.
  *
@@ -191,17 +222,17 @@ void InitializeEventSystem() {
  * tasks.
  * </p>
  */
-SKSEPluginLoad(const LoadInterface * skse)
-{
+extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_skse) {
+
 	InitializeLogging();
 
-	auto *plugin  = PluginDeclaration::GetSingleton();
+	auto* plugin = PluginDeclaration::GetSingleton();
 	auto version = plugin->GetVersion();
 
 	auto gitData = std::format("{} ({}) on {}", git_CommitSubject(), git_CommitSHA1(), git_CommitDate());
 	log::info("{} {} {} is loading...", plugin->GetName(), version, gitData);
 
-	Init(skse);
+	Init(a_skse);
 	InitializeMessaging();
 	Hooks::Install();
 	InitializePapyrus();
@@ -209,5 +240,5 @@ SKSEPluginLoad(const LoadInterface * skse)
 	InitializeEventSystem();
 
 	log::info("{} has finished loading.", plugin->GetName());
-	return(true);
+	return true;
 }
