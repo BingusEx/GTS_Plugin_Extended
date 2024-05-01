@@ -1,4 +1,4 @@
-[![CI](https://github.com/BingusEx/GTS_Plugin/actions/workflows/build.yml/badge.svg)](https://github.com/BingusEx/GTS_Plugin/actions/workflows/build.yml)
+[![CI](https://github.com/BingusEx/GTS_Plugin_Addons/actions/workflows/build.yml/badge.svg)](https://github.com/BingusEx/GTS_Plugin_Addons/actions/workflows/build.yml)
 
 # Size Matters SKSE64 Plugin
 
