@@ -1,4 +1,4 @@
-[![CI](https://github.com/QuantumEntangledAndy/GTS_Plugin/actions/workflows/build.yml/badge.svg)](https://github.com/QuantumEntangledAndy/GTS_Plugin/actions/workflows/build.yml)
+[![CI](https://github.com/BingusEx/GTS_Plugin/actions/workflows/build.yml/badge.svg)](https://github.com/BingusEx/GTS_Plugin/actions/workflows/build.yml)
 
 # Size Matters SKSE64 Plugin
 
@@ -6,12 +6,18 @@ This is the source for the Gianttess mod Size matters SKSE plugin.
 
 Monke coding with new features/expansions by Sermit
 Very complex parts (98% of DLL code) done by Andy
+Additions by BingusEx
 
-Still WIP
+~~Still~~ Forever WIP
 
 ---
 
-## Feature Wish List
+## Planned/Implemented Additions
+- [X] [1] Switch to a more recent commonlib branch (Done. Turns out it's not needed yet as newer commonlib still has issues)
+- [ ] [2] Add an imgui menu with more config options than available in the mcm (In Progress)
+- [ ] [3] Fix Input Manager to block game input when own keybinds are used. (In Progress)
+
+## Original Feature Wish List
 
 - [X] [1] Auto scale height to room
 - [ ] [2] Correct bumper for height
